@@ -35,8 +35,7 @@ var (
 	courses []cooper.CourseInfo
 )
 
-var helpMessage = `Cooper Union Discord Bot
-
+var helpMessage = `
 Usage:
   $PREFIX course-search "CH-110"
 `
@@ -139,8 +138,12 @@ func onMessageHandler (s *discordgo.Session, m *discordgo.MessageCreate) {
 
 func printHelpMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	_, err := s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-		Content: helpMessage,
 		Reference: m.Reference(),
+		Embed: &discordgo.MessageEmbed{
+			URL: "https://github.com/gary-kim/cooperdiscord",
+			Title: "Cooper Union Discord Bot",
+			Description: helpMessage,
+		},
 	})
 	return err
 }
