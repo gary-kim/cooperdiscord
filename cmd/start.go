@@ -28,11 +28,11 @@ import (
 )
 
 var (
-	guilds string
+	guilds        string
 	commandPrefix string
-	guildList []string
-	parser *shellwords.Parser
-	courses []cooper.CourseInfo
+	guildList     []string
+	parser        *shellwords.Parser
+	courses       []cooper.CourseInfo
 )
 
 var helpMessage = `
@@ -57,22 +57,21 @@ func init() {
 				return err
 			}
 
-
 			discord, err := discordgo.New(Token)
 			if err != nil {
 				return err
 			}
 			discord.Identify.Intents = discordgo.MakeIntent(
 				discordgo.IntentsAllWithoutPrivileged,
-				)
+			)
 			discord.AddHandler(onMessageHandler)
 			err = discord.Open()
 			if err != nil {
 				return err
 			}
 			log.Printf("Sucessfully started")
-			c := make (chan bool)
-			_ = <- c
+			c := make(chan bool)
+			_ = <-c
 			return nil
 		},
 	}
@@ -89,7 +88,7 @@ func init() {
 	Root.AddCommand(start)
 }
 
-func onMessageHandler (s *discordgo.Session, m *discordgo.MessageCreate) {
+func onMessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m == nil || !isEnabledGuild(m.GuildID) || m.Message == nil || !strings.HasPrefix(m.Message.Content, commandPrefix) {
 		return
 	}
@@ -113,7 +112,7 @@ func onMessageHandler (s *discordgo.Session, m *discordgo.MessageCreate) {
 		course := findCourseByID(command[2])
 		if course == nil {
 			_, err = s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-				Content: "Could not find course with code " + command[2],
+				Content:   "Could not find course with code " + command[2],
 				Reference: m.Reference(),
 			})
 			if err != nil {
@@ -140,8 +139,8 @@ func printHelpMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 	_, err := s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
 		Reference: m.Reference(),
 		Embed: &discordgo.MessageEmbed{
-			URL: "https://github.com/gary-kim/cooperdiscord",
-			Title: "Cooper Union Discord Bot",
+			URL:         "https://github.com/gary-kim/cooperdiscord",
+			Title:       "Cooper Union Discord Bot",
 			Description: helpMessage,
 		},
 	})
@@ -156,14 +155,14 @@ func courseToMessage(info *cooper.CourseInfo) *discordgo.MessageSend {
 		"**Extra Info:** " + info.ExtraInfo
 
 	messageEmbed := &discordgo.MessageEmbed{
-		URL: "https://dtss.cooper.edu/Student/Student/Courses/Search?keyword=" + dashCode,
-		Title: "DTSS: " + info.Code,
+		URL:         "https://dtss.cooper.edu/Student/Student/Courses/Search?keyword=" + dashCode,
+		Title:       "DTSS: " + info.Code,
 		Description: "DTSS page for " + info.Name,
 	}
 
 	return &discordgo.MessageSend{
 		Content: message,
-		Embed: messageEmbed,
+		Embed:   messageEmbed,
 	}
 }
 

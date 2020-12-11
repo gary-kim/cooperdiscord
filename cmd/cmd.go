@@ -26,8 +26,8 @@ var JsonOutput bool
 var Token string
 
 var Root = &cobra.Command{
-	Use: "cooperdiscord",
-	Short: "cooperdiscord is a Discord bot for the Cooper Union Discord Group",
+	Use:     "cooperdiscord",
+	Short:   "cooperdiscord is a Discord bot for the Cooper Union Discord Group",
 	Version: Version,
 }
 

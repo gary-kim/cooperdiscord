@@ -28,13 +28,13 @@ var (
 )
 
 type CourseInfo struct {
-	Code string
-	Name string
+	Code        string
+	Name        string
 	Description string
-	ExtraInfo string
+	ExtraInfo   string
 }
 
-func ScrapeInfo () ([]CourseInfo, error) {
+func ScrapeInfo() ([]CourseInfo, error) {
 	var tr []CourseInfo
 	urls := []string{"https://cooper.edu/engineering/curriculum/courses", "https://cooper.edu/humanities/curriculum/courses", "https://cooper.edu/art/curriculum/courses", "https://cooper.edu/architecture/curriculum/courses"}
 	for _, url := range urls {
@@ -71,10 +71,9 @@ func scrapePage(url string) ([]CourseInfo, error) {
 				Code:        strings.ToUpper(strings.TrimSpace(courseCode)),
 				Name:        strings.TrimSpace(selection.Find("h4").Text()),
 				Description: strings.TrimSpace(description),
-				ExtraInfo:  strings.TrimSpace(strings.TrimPrefix(selection.Find("p").Text(), description)),
+				ExtraInfo:   strings.TrimSpace(strings.TrimPrefix(selection.Find("p").Text(), description)),
 			})
 		}
 	})
 	return tr, nil
 }
-

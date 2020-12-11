@@ -23,9 +23,9 @@ import (
 
 var Version = "v0.0.1"
 
-func init () {
+func init() {
 	versionCmd := &cobra.Command{
-		Use: "version",
+		Use:   "version",
 		Short: "Print version then exit",
 		Run: func(command *cobra.Command, args []string) {
 			fmt.Printf("dcli - Version %s\n", Version)
