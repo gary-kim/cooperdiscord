@@ -7,4 +7,4 @@
 
 Licensed under [AGPL-3.0-or-later](./LICENSE).
 
-Copyright (C) 2020 Gary Kim %lt;<gary@garykim.dev>%gt;, All Rights Reserved
+Copyright (C) 2020 Gary Kim &lt;<gary@garykim.dev>&gt;, All Rights Reserved
