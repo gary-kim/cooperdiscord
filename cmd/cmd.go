@@ -35,9 +35,9 @@ func init() {
 	Root.SetVersionTemplate("{{.Name}} - Version {{.Version}}\n")
 
 	Root.PersistentFlags().BoolVarP(&JsonOutput, "json", "j", false, "Output as JSON")
-	Root.PersistentFlags().StringVarP(&Token, "token", "t", "DISCORD_TOKEN", "Discord token")
+	Root.PersistentFlags().StringVarP(&Token, "token", "t", "", "Discord token (ENV: DISCORD_TOKEN)")
 	if os.Getenv("DISCORD_TOKEN") == "" {
-		Root.MarkPersistentFlagRequired("token")
+		_ = Root.MarkPersistentFlagRequired("token")
 	} else {
 		Root.PersistentFlags().Set("token", os.Getenv("DISCORD_TOKEN"))
 	}

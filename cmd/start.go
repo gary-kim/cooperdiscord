@@ -76,7 +76,7 @@ func init() {
 		},
 	}
 
-	start.PersistentFlags().StringVarP(&guilds, "guilds", "g", "DISCORD_GUILDS", "Discord token")
+	start.PersistentFlags().StringVarP(&guilds, "guilds", "g", "", "Discord token (ENV: DISCORD_GUILS)")
 	if os.Getenv("DISCORD_GUILDS") != "" {
 		_ = start.PersistentFlags().Set("guilds", os.Getenv("DISCORD_GUILDS"))
 	}
