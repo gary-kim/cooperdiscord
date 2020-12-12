@@ -77,9 +77,7 @@ func init() {
 	}
 
 	start.PersistentFlags().StringVarP(&guilds, "guilds", "g", "DISCORD_GUILDS", "Discord token")
-	if os.Getenv("DISCORD_GUILDS") == "" {
-		_ = start.MarkPersistentFlagRequired("guilds")
-	} else {
+	if os.Getenv("DISCORD_GUILDS") != "" {
 		_ = start.PersistentFlags().Set("guilds", os.Getenv("DISCORD_GUILDS"))
 	}
 
@@ -149,7 +147,11 @@ func printHelpMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
 
 func courseToMessage(info *cooper.CourseInfo) *discordgo.MessageSend {
 	dashCode := strings.Replace(info.Code, " ", "-", -1)
-	message := "**Code:** " + dashCode + "\n" +
+	message := "**Code:** " + dashCode
+	if len(info.Codes) > 1 {
+		message += " (AKA: " + strings.Join(info.Codes, ", ") + ")"
+	}
+	message += "\n" +
 		"**Name:** " + info.Name + "\n" +
 		"**Description:** " + info.Description + "\n" +
 		"**Extra Info:** " + info.ExtraInfo

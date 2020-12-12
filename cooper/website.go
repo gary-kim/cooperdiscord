@@ -18,6 +18,8 @@ package cooper
 import (
 	"errors"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -29,6 +31,7 @@ var (
 
 type CourseInfo struct {
 	Code        string
+	Codes       []string
 	Name        string
 	Description string
 	ExtraInfo   string
@@ -65,10 +68,12 @@ func scrapePage(url string) ([]CourseInfo, error) {
 	var tr []CourseInfo
 
 	doc.Find("#course-listings .content li").Each(func(i int, selection *goquery.Selection) {
-		for _, courseCode := range strings.Split(selection.Find("h3").Text(), ",") {
+		codes := splitCodes(selection.Find("h3").Text())
+		for _, courseCode := range codes {
 			description := selection.Find("p").First().Text()
 			tr = append(tr, CourseInfo{
 				Code:        strings.ToUpper(strings.TrimSpace(courseCode)),
+				Codes:       codes,
 				Name:        strings.TrimSpace(selection.Find("h4").Text()),
 				Description: strings.TrimSpace(description),
 				ExtraInfo:   strings.TrimSpace(strings.TrimPrefix(selection.Find("p").Text(), description)),
@@ -76,4 +81,40 @@ func scrapePage(url string) ([]CourseInfo, error) {
 		}
 	})
 	return tr, nil
+}
+
+func splitCodes(code string) (tr []string) {
+	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	code = strings.TrimSpace(code)
+	for _, c := range strings.Split(code, ",") {
+		toset := []string{strings.TrimSpace(c)}
+		if ran := strings.Split(c, "-"); len(ran) == 2 {
+			toset = []string{}
+			arr := regexp.MustCompile("[\\.\\s]+").Split(strings.TrimSpace(ran[0]), -1)
+			toChange := arr[len(arr)-1]
+			stayStill := ran[0][0:strings.LastIndex(ran[0], toChange)]
+			toChange = strings.TrimSpace(toChange)
+
+			arr = regexp.MustCompile("[\\.\\s]+").Split(ran[1], -1)
+
+			target := strings.TrimSpace(arr[len(arr)-1])
+			if num, err := strconv.Atoi(toChange); err == nil {
+				for i := 0; i < 300; i++ {
+					toset = append(toset, stayStill+strconv.Itoa(num+i))
+					if strconv.Itoa(num+i) == target {
+						break
+					}
+				}
+			} else {
+				for i := strings.Index(alphabet, string(toChange[len(toChange)-1])); i < len(alphabet); i++ {
+					toset = append(toset, stayStill+string(alphabet[i]))
+					if alphabet[i] == target[len(target)-1] {
+						break
+					}
+				}
+			}
+		}
+		tr = append(tr, toset...)
+	}
+	return
 }
