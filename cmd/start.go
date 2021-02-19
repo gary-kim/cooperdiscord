@@ -146,6 +146,9 @@ func printCooperCareInfo(s *discordgo.Session, m *discordgo.MessageCreate) error
 			URL:         "https://cooper.care",
 			Title:       "Cooper Care",
 			Description: "Do not worry! Cooper Care is available for Cooper Union students. Visit this link for the best care Cooper can give...",
+			Image: &discordgo.MessageEmbedImage{
+				URL: "https://timely.md/wp-content/uploads/2020/07/cooper-care-logo-e1597950134870.png",
+			},
 		},
 	})
 	return err
