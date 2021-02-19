@@ -126,11 +126,29 @@ func onMessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		return
 	}
+	if strings.ToLower(command[1]) == "care" {
+		if err := printCooperCareInfo(s, m); err != nil {
+			log.Printf("Could not send response: %s\n", err)
+		}
+		return
+	}
 	err = printHelpMessage(s, m)
 	if err != nil {
 		log.Printf("Could not send help message: %s\n", err)
 	}
 	return
+}
+
+func printCooperCareInfo(s *discordgo.Session, m *discordgo.MessageCreate) error {
+	_, err := s.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
+		Reference: m.Reference(),
+		Embed: &discordgo.MessageEmbed{
+			URL:         "https://cooper.care",
+			Title:       "Cooper Care",
+			Description: "Do not worry! Cooper Care is available for Cooper Union students. Visit this link for the best care Cooper can give...",
+		},
+	})
+	return err
 }
 
 func printHelpMessage(s *discordgo.Session, m *discordgo.MessageCreate) error {
